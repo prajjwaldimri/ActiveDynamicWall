@@ -1,0 +1,64 @@
+﻿<Page
+    x:Class="ActiveDynamicWall.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ActiveDynamicWall"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}">
+
+    <Grid>
+        <StackPanel>
+            <CommandBar Background="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+                <AppBarButton Icon="Like" Style="{ThemeResource AppBarButtonRevealStyle}" Label="About This App">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Thenk" Margin="0,0,0,12" />
+                                <HyperlinkButton Content="Our GitHub Page" NavigateUri="https://github.com/xtai/mojave-dynamic-heic"/>
+                                <HyperlinkButton Content="Flat select image icon is by Dimi Kazak" NavigateUri="https://www.flaticon.com/authors/dimi-kazak"/>
+                                <HyperlinkButton Content="licensed by Creative Commons BY 3.0" NavigateUri="http://creativecommons.org/licenses/by/3.0/"/>
+                                <Button Content="Cool!" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </AppBarButton>
+                <AppBarButton Icon="Important" Style="{ThemeResource AppBarButtonRevealStyle}" Label="How Does It Work?">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="The Layout of the app is similar to a day Calendar. You can add Images to a specific Time and it will be Automatically set as a Desktop or Lockscreen Wallpaper. It is possible with this app to manually create a dynamic Desktop and Lockscreen wallpaper similar to the one featured on Mac OS Mojave." Margin="0,0,0,12" />
+                                <HyperlinkButton Content="Mojave Dynamic Heic " NavigateUri="https://github.com/xtai/mojave-dynamic-heic"/>
+                                <Button Content="That's great. Thanks!" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </AppBarButton>
+                <AppBarSeparator />
+                <AppBarButton Icon="Play" Label="Start Active Dynamic Wall" Click="StartDynamicWall"/>
+                <AppBarButton Icon="Pause" Label="Stop Active Dynamic Wall" Click="StopBackgroundTask"/>
+                <AppBarSeparator />
+                <AppBarButton Icon="Refresh" Label="Remove all Wallpapers" Click="ResetApp"/>
+            </CommandBar>
+            <GridView Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Margin="5">
+                    <Button Height="170" Width="242" Style="{ThemeResource AppBarButtonRevealStyle}" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="FilePickerWallpaper" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center">
+                        <StackPanel>
+                            <Image x:Name="selectImg"/>
+                            <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Select Image" HorizontalAlignment="Center" Opacity="0.75"></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <TimePicker Width="160" HorizontalAlignment="Left" Margin="0,10,0,10" VerticalAlignment="Center" Header="Time to Apply Wallpaper:" ClockIdentifier="24HourClock" x:Name="timeSelectedForWallpaper"></TimePicker>
+                    <Button Height="40" Width="242" Style="{ThemeResource AppBarButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="AddFile00" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
+                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Image To Wallpaper List"></TextBlock>
+                    </Button>
+                    <Button Height="40" Width="242" Style="{ThemeResource AppBarButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="RemoveFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
+                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Oops!"></TextBlock>
+                    </Button>
+                    <TextBlock x:Name="AddImageOutput" Style="{ThemeResource BaseTextBlockStyle}"></TextBlock>
+                </StackPanel>
+            </GridView>
+        </StackPanel>
+    </Grid>
+</Page>
