@@ -36,6 +36,9 @@
                     </Button.Flyout>
                 </AppBarButton>
                 <AppBarSeparator />
+                <AppBarToggleButton Icon="SetLockScreen" Label="Set to Lockscreen" Checked="ApplyToLockscreen" Unchecked="NotApplyToLockscreen"/>
+                <AppBarToggleButton Icon="SetLockScreen" Label="Set to Desktop" Checked="ApplyToDesktop" Unchecked="NotApplyToDesktop"/>
+                <AppBarSeparator />
                 <AppBarButton Icon="Play" Label="Start Active Dynamic Wall" Click="StartDynamicWall"/>
                 <AppBarButton Icon="Pause" Label="Stop Active Dynamic Wall" Click="StopBackgroundTask"/>
                 <AppBarSeparator />
@@ -50,7 +53,7 @@
                         </StackPanel>
                     </Button>
                     <TimePicker Width="160" HorizontalAlignment="Left" Margin="0,10,0,10" VerticalAlignment="Center" Header="Time to Apply Wallpaper:" ClockIdentifier="24HourClock" x:Name="timeSelectedForWallpaper"></TimePicker>
-                    <Button Height="40" Width="242" Style="{ThemeResource AppBarButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="AddFile00" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
+                    <Button Height="40" Width="242" Style="{ThemeResource AppBarButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="AddFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
                         <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Image To Wallpaper List"></TextBlock>
                     </Button>
                     <Button Height="40" Width="242" Style="{ThemeResource AppBarButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="RemoveFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
@@ -58,6 +61,8 @@
                     </Button>
                     <TextBlock x:Name="AddImageOutput" Style="{ThemeResource BaseTextBlockStyle}"></TextBlock>
                 </StackPanel>
+            </GridView>
+            <GridView ItemsSource="{x:Bind wallpapers}" >
             </GridView>
         </StackPanel>
     </Grid>
