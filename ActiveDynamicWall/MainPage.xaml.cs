@@ -78,6 +78,7 @@ namespace ActiveDynamicWall
                     await fileName.CopyAsync(timeFolder, selectedImgName, NameCollisionOption.ReplaceExisting);
                     //Preview the Image on the interface
                     selectImg.Source = new BitmapImage(new Uri("ms-appx:///local/TimeWallpaper/" + selectedImgName));
+                    AddImageOutput.Text = "Image Selected";
                 }
                 else if (dictionary.ContainsValue(fileName.Name))
                 {
@@ -133,6 +134,7 @@ namespace ActiveDynamicWall
             {
                 StorageFile toRemove = await timeFolder.GetFileAsync(name);
                 await toRemove.DeleteAsync();
+                AddImageOutput.Text = "Image Removed";
             }
 
         }
@@ -149,6 +151,7 @@ namespace ActiveDynamicWall
                 await files.DeleteAsync(StorageDeleteOption.Default);
             }
             */
+            AddImageOutput.Text = "We have reset Everything!";
         }
 
 
@@ -168,6 +171,8 @@ namespace ActiveDynamicWall
                 wallsList.Add(hour_min[0] + hour_min[1] + ":" + item.Value);
             }
             await FileIO.WriteLinesAsync(wallpaperlistfile, wallsList);
+            AddImageOutput.Text = "Requesting Background Access";
+            RequestBackgroundAccess();
         }
 
         // CREATING TASK --------------------------------------------------
@@ -175,7 +180,12 @@ namespace ActiveDynamicWall
         {
             var result = await BackgroundExecutionManager.RequestAccessAsync();
             AddImageOutput.Text = result.ToString();
-            if (result != BackgroundAccessStatus.DeniedByUser) RegisterBackgroundTask();
+            if (result != BackgroundAccessStatus.DeniedByUser)
+            {
+                RegisterBackgroundTask();
+                AddImageOutput.Text = "We have Background Access. Registering the Background Task";
+            }
+
         }
 
         // REGISTER TASK
@@ -192,6 +202,7 @@ namespace ActiveDynamicWall
             builder.SetTrigger(new TimeTrigger(15, false));
             builder.AddCondition(new SystemCondition(SystemConditionType.SessionConnected));
             BackgroundTaskRegistration task = builder.Register();
+            AddImageOutput.Text = "Background Task Registered";
         }
 
         //Stop background Task
@@ -199,7 +210,12 @@ namespace ActiveDynamicWall
         {
             foreach (var bgTask in BackgroundTaskRegistration.AllTasks)
                 if (bgTask.Value.Name == "BackgroundTrigger")
+                {
                     bgTask.Value.Unregister(true);
+                    AddImageOutput.Text = "Background Task Stoped";
+                }
+                    
+
         }
 
 
