@@ -26,7 +26,10 @@ namespace BackgroundTaskComponent
             string[] lines = (await FileIO.ReadTextAsync(file)).Split('\n');
 
 
-            //
+            // Local Settings values are always null by default. Make sure you check if
+            // they are null before using them or give them a value when the
+            // app starts for the first time.
+
             int i = -1;
             if (ApplicationData.Current.LocalSettings.Values["wallIndex"] != null)
             {
