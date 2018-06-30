@@ -19,9 +19,21 @@ namespace BackgroundTaskComponent
             _deferral = taskInstance.GetDeferral();
             SendToast("Active Dynamic Wallpaper is now running in the background");
 
-            StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("wallsFile.txt");
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
+
+            StorageFile file = await timeFolder.GetFileAsync("wallsFile.txt");
             string[] lines = (await FileIO.ReadTextAsync(file)).Split('\n');
-            int i = (int)ApplicationData.Current.LocalSettings.Values["wallIndex"];
+
+
+            //
+            int i = -1;
+            if (ApplicationData.Current.LocalSettings.Values["wallIndex"] != null)
+            {
+               i = (int)ApplicationData.Current.LocalSettings.Values["wallIndex"];
+            }
+
+             
             string[] pieces = lines[i].Split(':'); // time/name.png
             string[] nums = pieces[0].Split(' '); // hour/min
             //System.Diagnostics.Debug.WriteLine(nums[0] + " " + nums[1]);
@@ -45,8 +57,17 @@ namespace BackgroundTaskComponent
         {
             if (UserProfilePersonalizationSettings.IsSupported())
             {
-                var uri = new Uri("ms-appx:///local/TimeWallpaper/" + assetsFileName);
-                StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+                // There is a space due to the formatting of the file at the end of some of the lines.
+                // This is represented as "\r".
+                // Need to remove it so that timeFolder.GetFileAsync() can work correctly.
+
+                if (assetsFileName.Contains("\r"))
+                {
+                    assetsFileName = assetsFileName.Replace("\r", "");
+                };
+                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
+                StorageFile file = await timeFolder.GetFileAsync(assetsFileName);
                 UserProfilePersonalizationSettings profileSettings = UserProfilePersonalizationSettings.Current;
                 return await profileSettings.TrySetWallpaperImageAsync(file);
 

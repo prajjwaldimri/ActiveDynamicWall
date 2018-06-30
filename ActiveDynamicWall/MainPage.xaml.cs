@@ -26,9 +26,9 @@ namespace ActiveDynamicWall
         public List<int> numList = new List<int>();
         public MainPage()
         {
-            /*
+
             InitWallpaper();
-            */
+
             this.InitializeComponent();
             AddImageOutput.Text = BackgroundWorkCost.CurrentBackgroundWorkCost.ToString();
         }
@@ -48,23 +48,33 @@ namespace ActiveDynamicWall
 
         private async void InitWallpaper()
         {
-            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-            if (await ApplicationData.Current.LocalFolder.TryGetItemAsync("WallpaperTextfile.txt") != null )
-            {
-                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("WallpaperTextfile.txt");
-                string[] lines = (await FileIO.ReadTextAsync(file)).Split('\n');
-                for (int i = 0; i < lines.Length - 1; i++)
-                {
-                    string[] pieces = lines[i].Split(':'); // time/name.png
-                    string[] nums = pieces[0].Split(' '); // hour/min
-                    wallpapers.Add(new Wallpaper(pieces[1],
-                            new BitmapImage(new Uri("ms-appx:///local/TimeWallpaper/" + pieces[1])),
-                            int.Parse(nums[0]), int.Parse(nums[1])));
-                    dictionary.Add(new Tuple<int, int>(int.Parse(nums[0]), int.Parse(nums[1])), pieces[1]);
-                    numList.Add(i);
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 
+            try
+            {
+                StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
+                if (await ApplicationData.Current.LocalFolder.TryGetItemAsync("WallpaperTextfile.txt") != null)
+                {
+                    StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("WallpaperTextfile.txt");
+                    string[] lines = (await FileIO.ReadTextAsync(file)).Split('\n');
+                    for (int i = 0; i < lines.Length - 1; i++)
+                    {
+                        string[] pieces = lines[i].Split(':'); // time/name.png
+                        string[] nums = pieces[0].Split(' '); // hour/min
+                        wallpapers.Add(new Wallpaper(pieces[1],
+                                new BitmapImage(new Uri(timeFolder.Path + "/" + pieces[1])),
+                                int.Parse(nums[0]), int.Parse(nums[1])));
+                        dictionary.Add(new Tuple<int, int>(int.Parse(nums[0]), int.Parse(nums[1])), pieces[1]);
+                        numList.Add(i);
+
+                    }
                 }
             }
+            catch (Exception)
+            {
+
+            }
+
         }
 
 
@@ -232,7 +242,7 @@ namespace ActiveDynamicWall
                     bgTask.Value.Unregister(true);
                     AddImageOutput.Text = "Background Task Stoped";
                 }
-                    
+
 
         }
 
