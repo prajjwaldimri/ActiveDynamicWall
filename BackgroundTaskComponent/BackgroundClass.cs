@@ -42,8 +42,11 @@ namespace BackgroundTaskComponent
             //System.Diagnostics.Debug.WriteLine(nums[0] + " " + nums[1]);
             //System.Diagnostics.Debug.WriteLine(hourMin.Item1 + " " + hourMin.Item2);
 
+            int hours = int.Parse(nums[0]);
+            int minutes = int.Parse(nums[1]);
+
             // if current time is time in the current wallpaper
-            if (DateTime.Now.Hour >= int.Parse(nums[0]) && DateTime.Now.Minute >= int.Parse(nums[1]))
+            if (CheckIfTimeForWallpaperChange(hours,minutes))
             {
                 // change wallpaper
                 await SetWallpaperAsync(pieces[1]);
@@ -52,6 +55,23 @@ namespace BackgroundTaskComponent
                 ApplicationData.Current.LocalSettings.Values["wallIndex"] = i;
             }
             _deferral.Complete();
+        }
+
+        // Properly determines if the it is time for the wallpaper to change
+        private bool CheckIfTimeForWallpaperChange(int hours, int minutes)
+        {
+            bool timeForChange = false;
+            if (DateTime.Now.Hour > hours)
+            {
+                timeForChange = true; 
+            }
+
+            else if (DateTime.Now.Hour == hours && DateTime.Now.Minute >= minutes)
+            {
+                timeForChange = true;
+            }
+
+            return timeForChange;
         }
 
         // Change wallpaper
