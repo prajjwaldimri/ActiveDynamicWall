@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Storage;
 using Windows.System.UserProfile;
-using Windows.UI.Notifications;
+using Windows.UI.Notifications;         
 
 namespace BackgroundTaskComponent
 {
