@@ -108,7 +108,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BackgroundClass.cs" />
+    <Compile Include="GeoLocatorClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SunriseSunsetAPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">

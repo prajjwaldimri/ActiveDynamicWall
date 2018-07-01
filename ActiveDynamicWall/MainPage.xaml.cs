@@ -211,7 +211,7 @@ namespace ActiveDynamicWall
             if (result != BackgroundAccessStatus.DeniedByUser)
             {
                 RegisterBackgroundTask();
-                AddImageOutput.Text = "We have Background Access. Registering the Background Task";
+                AddImageOutput.Text = "It Works!";
             }
 
         }
