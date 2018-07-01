@@ -252,22 +252,22 @@ namespace ActiveDynamicWall
         private void ApplyToLockscreen(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["applyLockscreen"] = "checked";
+            localSettings.Values["applyLockscreen"] = true;
         }
         private void NotApplyToLockscreen(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["applyLockscreen"] = "unchecked";
+            localSettings.Values["applyLockscreen"] = false;
         }
         private void ApplyToDesktop(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["applyDesktop"] = "checked";
+            localSettings.Values["applyDesktop"] = true;
         }
         private void NotApplyToDesktop(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["applyDesktop"] = "unchecked";
+            localSettings.Values["applyDesktop"] = false;
         }
 
 

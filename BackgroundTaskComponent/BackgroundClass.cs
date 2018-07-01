@@ -50,7 +50,8 @@ namespace BackgroundTaskComponent
             if (CheckIfTimeForWallpaperChange(hours,minutes))
             {
                 // change wallpaper
-                await SetWallpaperAsync(pieces[1]);
+                await SetWallpaperToDesktopAsync(pieces[1]);
+
                 if (i == lines.Length - 2) i = -1;
                 i++;
                 ApplicationData.Current.LocalSettings.Values["wallIndex"] = i;
@@ -78,7 +79,7 @@ namespace BackgroundTaskComponent
 
         // Change wallpaper
         // Pass in a relative path to a file inside the assets folder
-        async Task<bool> SetWallpaperAsync(string assetsFileName)
+        async Task<bool> SetWallpaperToDesktopAsync(string assetsFileName)
         {
             if (UserProfilePersonalizationSettings.IsSupported())
             {

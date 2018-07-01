@@ -8,9 +8,9 @@
     mc:Ignorable="d"
     Background="Transparent">
 
-    <Grid>
-        <StackPanel Background="{ThemeResource SystemControlAcrylicElementBrush}">
-            <CommandBar Background="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+    <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}">
+        <StackPanel Background="Transparent" Margin="0">
+            <CommandBar Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
                 <AppBarButton Icon="Like" Style="{ThemeResource AppBarButtonRevealStyle}" Label="About This App">
                     <Button.Flyout>
                         <Flyout>
@@ -45,54 +45,69 @@
                 <AppBarSeparator />
                 <AppBarButton Icon="Refresh" Label="Remove all Wallpapers" Click="ResetApp"/>
             </CommandBar>
-            <GridView Margin="10" HorizontalAlignment="Center" VerticalAlignment="Top" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollMode="Enabled">
-                <StackPanel Margin="15">
-                    <TextBlock Text="Select an Image with a Timer:" Margin="5,5,5,15"/>
-                    <Button Height="170" Width="242" Style="{ThemeResource ButtonRevealStyle}" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="FilePickerWallpaper" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center">
-                        <StackPanel>
-                            <Image x:Name="selectImg"/>
-                            <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Select Image" HorizontalAlignment="Center" Opacity="0.75"></TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <TimePicker Width="160" HorizontalAlignment="Center" Margin="0,10,0,10" VerticalAlignment="Center" Header="Time to Apply Wallpaper:" ClockIdentifier="24HourClock" x:Name="timeSelectedForWallpaper"></TimePicker>
-                    <Button Height="40" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="AddFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
-                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Image To Wallpaper List"></TextBlock>
-                    </Button>
-                    <Button Height="40" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="RemoveFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
-                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Oops!"></TextBlock>
-                    </Button>
-                    <TextBlock x:Name="AddImageOutput" Style="{ThemeResource BaseTextBlockStyle}"></TextBlock>
-                </StackPanel>
-                <StackPanel Margin="15">
-                    <TextBlock Text="Select sets of Day/Night Images:" Margin="5,5,5,15"/>
-                    <Button Height="90" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
-                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Day Image sequence" Margin="0,0,0,0"></TextBlock>
-                    </Button>
-                    <Button Height="90" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
-                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Night Image sequence" Margin="0,0,0,0"></TextBlock>
-                    </Button>
-                    <Button Height="40" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
-                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Images To Wallpaper List"></TextBlock>
-                    </Button>
-                    <TextBlock Text="Information Text Comes Here" Margin="5,5,5,5" Width="242" TextWrapping="WrapWholeWords"/>
-                </StackPanel>
-            </GridView>
-            <GridView ItemsSource="{x:Bind wallpapers}" Margin="0,0,0,20">
-                <GridView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </GridView.ItemsPanel>
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="local:Wallpaper">
-                        <StackPanel Orientation="Vertical" Height="200">
-                            <TextBlock HorizontalAlignment="Left" Margin="10" Text="{x:Bind fileName}"/>
-                            <TextBlock HorizontalAlignment="Left" Margin="10" Text="Time to Apply"/>
-                            <TextBlock HorizontalAlignment="Left" Margin="5" Text="{x:Bind time}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
         </StackPanel>
+        <Pivot Margin="0,70,0,0" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <PivotItem Header="Wallpaper with a Timer">
+                <StackPanel Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+                    <TextBlock Text="Use an Image as a Wallpaper at a specified Time."/>
+                    <GridView Margin="10" HorizontalAlignment="Center" VerticalAlignment="Top" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollMode="Enabled">
+                        <StackPanel Margin="15">
+                            <TextBlock Text="Select an Image with a Timer:" Margin="5,5,5,15"/>
+                            <Button Height="170" Width="242" Style="{ThemeResource ButtonRevealStyle}" Background="{ThemeResource SystemControlAcrylicElementBrush}" Click="FilePickerWallpaper" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center">
+                                <StackPanel>
+                                    <Image x:Name="selectImg"/>
+                                    <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Select Image" HorizontalAlignment="Center" Opacity="0.75"></TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <TimePicker Width="160" HorizontalAlignment="Center" Margin="0,10,0,10" VerticalAlignment="Center" Header="Time to Apply Wallpaper:" ClockIdentifier="24HourClock" x:Name="timeSelectedForWallpaper"></TimePicker>
+                            <Button Height="40" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicElementBrush}" Click="AddFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Image To Wallpaper List"></TextBlock>
+                            </Button>
+                            <Button Height="40" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicElementBrush}" Click="RemoveFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Oops!"></TextBlock>
+                            </Button>
+                            <TextBlock x:Name="AddImageOutput" Style="{ThemeResource BaseTextBlockStyle}"></TextBlock>
+                        </StackPanel>
+                    </GridView>
+                    <GridView ItemsSource="{x:Bind wallpapers}" Margin="0,0,0,20">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:DataType="local:Wallpaper">
+                                <StackPanel Orientation="Vertical" Height="200">
+                                    <TextBlock HorizontalAlignment="Left" Margin="10" Text="{x:Bind fileName}"/>
+                                    <TextBlock HorizontalAlignment="Left" Margin="10" Text="Time to Apply"/>
+                                    <TextBlock HorizontalAlignment="Left" Margin="5" Text="{x:Bind time}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem Header="Wallpaper with Day/Night Cycle">
+                <StackPanel Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+                    <TextBlock Text="Use Image Sequences that shift between Day Time and Night Time."/>
+                    <GridView Margin="10" HorizontalAlignment="Center" VerticalAlignment="Top" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollMode="Enabled">
+                        <StackPanel Margin="15">
+                            <TextBlock Text="Select sets of Day/Night Images:" Margin="5,5,5,15"/>
+                            <Button Height="90" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Day Image sequence" Margin="0,0,0,0"></TextBlock>
+                            </Button>
+                            <Button Height="90" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Night Image sequence" Margin="0,0,0,0"></TextBlock>
+                            </Button>
+                            <Button Height="40" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicElementBrush}" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Images To Wallpaper List"></TextBlock>
+                            </Button>
+                            <TextBlock Text="Information Text Comes Here" Margin="5,5,5,5" Width="242" TextWrapping="WrapWholeWords"/>
+                        </StackPanel>
+                    </GridView>
+                </StackPanel>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>
+
