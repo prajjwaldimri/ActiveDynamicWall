@@ -6,16 +6,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicElementBrush}">
+    Background="Transparent">
 
     <Grid>
-        <StackPanel>
+        <StackPanel Background="{ThemeResource SystemControlAcrylicElementBrush}">
             <CommandBar Background="{ThemeResource SystemControlAcrylicWindowBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
                 <AppBarButton Icon="Like" Style="{ThemeResource AppBarButtonRevealStyle}" Label="About This App">
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel>
-                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="We are just starting with this app and we have big ideas for it. For now, the app applies a wallpaper to the desktop based on a specified time. Just pick an image and set the time for it before adding it to the app's list. the app will nun a process in the background every 15 minuts to check if it is time to apply this wallpaper." Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="We are just starting with this app and we have big ideas for it. For now, the app applies a wallpaper to the desktop based on a specified time. Just pick an image and set the time for it before adding it to the app's list. the app will nun a process in the background every 15 minuts to check if it is time to apply this wallpaper." Margin="0,0,0,12" TextWrapping="WrapWholeWords" Width="400"/>
                                 <HyperlinkButton Content="Our GitHub Page" NavigateUri="https://github.com/xtai/mojave-dynamic-heic"/>
                                 <HyperlinkButton Content="Join the conversation" NavigateUri="https://www.reddit.com/r/WPDev/comments/8trjdd/an_app_to_create_a_dynamic_wallpaper_effect_on/"/>
                                 <HyperlinkButton Content="Flat select image icon is by Dimi Kazak" NavigateUri="https://www.flaticon.com/authors/dimi-kazak"/>
@@ -29,7 +29,7 @@
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel>
-                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="The Layout of the app is similar to a day Calendar. You can add Images to a specific Time and it will be Automatically set as a Desktop or Lockscreen Wallpaper. It is possible with this app to manually create a dynamic Desktop and Lockscreen wallpaper similar to the one featured on Mac OS Mojave." TextWrapping="Wrap" Margin="0,0,0,12" />
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="The Layout of the app is similar to a day Calendar. You can add Images to a specific Time and it will be Automatically set as a Desktop or Lockscreen Wallpaper. It is possible with this app to manually create a dynamic Desktop and Lockscreen wallpaper similar to the one featured on Mac OS Mojave." TextWrapping="WrapWholeWords" Margin="0,0,0,12" Width="400"/>
                                 <HyperlinkButton Content="Mojave Dynamic Heic " NavigateUri="https://github.com/xtai/mojave-dynamic-heic"/>
                             </StackPanel>
                         </Flyout>
