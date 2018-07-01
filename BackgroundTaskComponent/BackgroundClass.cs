@@ -12,8 +12,11 @@ namespace BackgroundTaskComponent
 {
     public sealed class BackgroundClass : IBackgroundTask
     {
+        BackgroundTaskDeferral _deferral; // Used when you have async code in the Run Method
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
+            _deferral = taskInstance.GetDeferral();
+
             SendToast("Active Dynamic Wallpaper is now running in the background");
 
             StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("wallsFile.txt");
@@ -33,6 +36,7 @@ namespace BackgroundTaskComponent
                 i++;
                 ApplicationData.Current.LocalSettings.Values["wallIndex"] = i;
             }
+            _deferral.Complete();
         }
 
         // Change wallpaper
