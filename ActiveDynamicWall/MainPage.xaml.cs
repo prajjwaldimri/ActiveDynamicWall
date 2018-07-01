@@ -8,6 +8,8 @@ using Windows.ApplicationModel.Background;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -24,32 +26,55 @@ namespace ActiveDynamicWall
         public List<int> numList = new List<int>();
         public MainPage()
         {
-            /*
+
             InitWallpaper();
-            */
+
             this.InitializeComponent();
             AddImageOutput.Text = BackgroundWorkCost.CurrentBackgroundWorkCost.ToString();
         }
 
+        // Code that will run when navigating to this page.
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            await TryCreateTimeWallpaperFolder();
+        }
+
+        private async Task TryCreateTimeWallpaperFolder()
+        {
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            await localFolder.CreateFolderAsync("TimeWallpaper", CreationCollisionOption.OpenIfExists);
+        }
+
         private async void InitWallpaper()
         {
-            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-            if (await ApplicationData.Current.LocalFolder.TryGetItemAsync("WallpaperTextfile.txt") != null )
-            {
-                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("WallpaperTextfile.txt");
-                string[] lines = (await FileIO.ReadTextAsync(file)).Split('\n');
-                for (int i = 0; i < lines.Length - 1; i++)
-                {
-                    string[] pieces = lines[i].Split(':'); // time/name.png
-                    string[] nums = pieces[0].Split(' '); // hour/min
-                    wallpapers.Add(new Wallpaper(pieces[1],
-                            new BitmapImage(new Uri("ms-appx:///local/TimeWallpaper/" + pieces[1])),
-                            int.Parse(nums[0]), int.Parse(nums[1])));
-                    dictionary.Add(new Tuple<int, int>(int.Parse(nums[0]), int.Parse(nums[1])), pieces[1]);
-                    numList.Add(i);
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 
+            try
+            {
+                StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
+                if (await ApplicationData.Current.LocalFolder.TryGetItemAsync("WallpaperTextfile.txt") != null)
+                {
+                    StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("WallpaperTextfile.txt");
+                    string[] lines = (await FileIO.ReadTextAsync(file)).Split('\n');
+                    for (int i = 0; i < lines.Length - 1; i++)
+                    {
+                        string[] pieces = lines[i].Split(':'); // time/name.png
+                        string[] nums = pieces[0].Split(' '); // hour/min
+                        wallpapers.Add(new Wallpaper(pieces[1],
+                                new BitmapImage(new Uri(timeFolder.Path + "/" + pieces[1])),
+                                int.Parse(nums[0]), int.Parse(nums[1])));
+                        dictionary.Add(new Tuple<int, int>(int.Parse(nums[0]), int.Parse(nums[1])), pieces[1]);
+                        numList.Add(i);
+
+                    }
                 }
             }
+            catch (Exception)
+            {
+
+            }
+
         }
 
 
@@ -64,8 +89,8 @@ namespace ActiveDynamicWall
             pickerWallpaper.FileTypeFilter.Add(".png");
 
             //Get to the App local folder
-            StorageFolder appFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-            StorageFolder timeFolder = await appFolder.GetFolderAsync("TimeWallpaper");
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
 
             //Pick an Image
             StorageFile fileName = await pickerWallpaper.PickSingleFileAsync();
@@ -77,7 +102,7 @@ namespace ActiveDynamicWall
                     selectedImgName = fileName.Name;
                     await fileName.CopyAsync(timeFolder, selectedImgName, NameCollisionOption.ReplaceExisting);
                     //Preview the Image on the interface
-                    selectImg.Source = new BitmapImage(new Uri("ms-appx:///local/TimeWallpaper/" + selectedImgName));
+                    selectImg.Source = new BitmapImage(new Uri(timeFolder.Path + "/" + selectedImgName));
                     AddImageOutput.Text = "Image Selected";
                 }
                 else if (dictionary.ContainsValue(fileName.Name))
@@ -87,19 +112,21 @@ namespace ActiveDynamicWall
                 }
                 else
                 {
-                    selectImg.Source = new BitmapImage(new Uri("ms-appx:///Assets/wallpaper.png"));
+                    //selectImg.Source = new BitmapImage(new Uri("ms-appx:///Assets/wallpaper.png"));
                     selectedImgName = fileName.Name;
                     /*var toDelete = await timeFolder.GetFilesAsync(selectedImgName);
                     await toDelete.DeleteAsync();*/
                     await fileName.CopyAsync(timeFolder, selectedImgName, NameCollisionOption.ReplaceExisting);
-                    selectImg.Source = new BitmapImage(new Uri("ms-appx:///local/TimeWallpaper/" + selectedImgName));
+                    selectImg.Source = new BitmapImage(new Uri(timeFolder.Path + "/" + selectedImgName));
                 }
             }
         }
 
         //add selected file to the List - w
-        private void AddFile(object sender, RoutedEventArgs e)
+        private async void AddFile(object sender, RoutedEventArgs e)
         {
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFolder TimeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
             BitmapImage bitImageSource = (BitmapImage)selectImg.Source;
             if (bitImageSource != null)
             {
@@ -108,7 +135,7 @@ namespace ActiveDynamicWall
                     //add to dictionary
                     dictionary.Add(new Tuple<int, int>(timeSelectedForWallpaper.Time.Hours, timeSelectedForWallpaper.Time.Minutes), selectedImgName);
                     //add to ObservableCollection
-                    wallpapers.Add(new Wallpaper(selectedImgName, new BitmapImage(new Uri("ms-appx:///local/TimeWallpaper/" + selectedImgName)), timeSelectedForWallpaper.Time.Hours, timeSelectedForWallpaper.Time.Minutes));
+                    wallpapers.Add(new Wallpaper(selectedImgName, new BitmapImage(new Uri(TimeFolder.Path + "/" + selectedImgName)), timeSelectedForWallpaper.Time.Hours, timeSelectedForWallpaper.Time.Minutes));
                     AddImageOutput.Text = "The Image is in the Wallpaper collection";
                 }
                 else
@@ -121,8 +148,8 @@ namespace ActiveDynamicWall
         //Oops! this is to remove the last added image to the list
         private async void RemoveFile(object sender, RoutedEventArgs e)
         {
-            StorageFolder appFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-            StorageFolder timeFolder = await appFolder.GetFolderAsync("TimeWallpaper");
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
             var name = wallpapers[wallpapers.Count - 1].fileName;
             wallpapers[wallpapers.Count - 1] = null;
             selectImg.Source = new BitmapImage(new Uri("ms-appx:///Assets/imgIconBackground.png"));
@@ -142,15 +169,15 @@ namespace ActiveDynamicWall
         //If we want to reset Everything and remove all files from TimeWallpaper folder
         private async void ResetApp(object sender, RoutedEventArgs e)
         {
-            StorageFolder appFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-            StorageFolder timeFolder = await appFolder.GetFolderAsync("TimeWallpaper");
-            /*
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
+
             var files = (await timeFolder.GetFilesAsync());
             foreach (var file in files)
             {
-                await files.DeleteAsync(StorageDeleteOption.Default);
+                await file.DeleteAsync(StorageDeleteOption.Default);
             }
-            */
+
             AddImageOutput.Text = "We have reset Everything!";
         }
 
@@ -158,10 +185,11 @@ namespace ActiveDynamicWall
         //Start Background Task
         private async void StartDynamicWall(object sender, RoutedEventArgs e)
         {
-            StorageFolder appFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-            StorageFolder timeFolder = await appFolder.GetFolderAsync("TimeWallpaper");
-            if (await timeFolder.TryGetItemAsync("wallpaoerlistfile.txt") != null)
-                await (await timeFolder.TryGetItemAsync("wallpaoerlistfile.txt")).DeleteAsync();
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
+            if (await timeFolder.TryGetItemAsync("wallpaperlistfile.txt") != null)
+                await (await timeFolder.TryGetItemAsync("wallpaperlistfile.txt")).DeleteAsync();
+
             StorageFile wallpaperlistfile = await timeFolder.CreateFileAsync("wallsFile.txt", CreationCollisionOption.ReplaceExisting);
             List<string> wallsList = new List<string>();
             foreach (var item in dictionary)
@@ -214,7 +242,7 @@ namespace ActiveDynamicWall
                     bgTask.Value.Unregister(true);
                     AddImageOutput.Text = "Background Task Stoped";
                 }
-                    
+
 
         }
 
@@ -224,25 +252,21 @@ namespace ActiveDynamicWall
         private void ApplyToLockscreen(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             localSettings.Values["applyLockscreen"] = "checked";
         }
         private void NotApplyToLockscreen(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             localSettings.Values["applyLockscreen"] = "unchecked";
         }
         private void ApplyToDesktop(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             localSettings.Values["applyDesktop"] = "checked";
         }
         private void NotApplyToDesktop(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             localSettings.Values["applyDesktop"] = "unchecked";
         }
 

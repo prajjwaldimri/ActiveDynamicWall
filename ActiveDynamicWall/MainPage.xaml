@@ -46,17 +46,17 @@
             </CommandBar>
             <GridView Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Margin="5">
-                    <Button Height="170" Width="242" Style="{ThemeResource AppBarButtonRevealStyle}" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="FilePickerWallpaper" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center">
+                    <Button Height="170" Width="242" Style="{ThemeResource ButtonRevealStyle}" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="FilePickerWallpaper" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center">
                         <StackPanel>
                             <Image x:Name="selectImg"/>
                             <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Select Image" HorizontalAlignment="Center" Opacity="0.75"></TextBlock>
                         </StackPanel>
                     </Button>
                     <TimePicker Width="160" HorizontalAlignment="Left" Margin="0,10,0,10" VerticalAlignment="Center" Header="Time to Apply Wallpaper:" ClockIdentifier="24HourClock" x:Name="timeSelectedForWallpaper"></TimePicker>
-                    <Button Height="40" Width="242" Style="{ThemeResource AppBarButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="AddFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
+                    <Button Height="40" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="AddFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
                         <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Add Image To Wallpaper List"></TextBlock>
                     </Button>
-                    <Button Height="40" Width="242" Style="{ThemeResource AppBarButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="RemoveFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
+                    <Button Height="40" Width="242" Style="{ThemeResource ButtonRevealStyle}" Opacity="0.75" Background="{ThemeResource SystemControlAcrylicWindowBrush}" Click="RemoveFile" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Center">
                         <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Oops!"></TextBlock>
                     </Button>
                     <TextBlock x:Name="AddImageOutput" Style="{ThemeResource BaseTextBlockStyle}"></TextBlock>

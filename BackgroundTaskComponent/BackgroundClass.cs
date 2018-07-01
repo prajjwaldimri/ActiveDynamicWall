@@ -7,6 +7,7 @@ using Windows.ApplicationModel.Background;
 using Windows.Storage;
 using Windows.System.UserProfile;
 using Windows.UI.Notifications;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace BackgroundTaskComponent
 {
@@ -19,16 +20,34 @@ namespace BackgroundTaskComponent
 
             SendToast("Active Dynamic Wallpaper is now running in the background");
 
-            StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("wallsFile.txt");
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
+
+            StorageFile file = await timeFolder.GetFileAsync("wallsFile.txt");
             string[] lines = (await FileIO.ReadTextAsync(file)).Split('\n');
-            int i = (int)ApplicationData.Current.LocalSettings.Values["wallIndex"];
+
+            
+            // Local Settings values are always null by default. Make sure you check if
+            // they are null before using them or give them a value when the
+            // app starts for the first time.
+
+            int i = 0;
+            if (ApplicationData.Current.LocalSettings.Values["wallIndex"] != null)
+            {
+               i = (int)ApplicationData.Current.LocalSettings.Values["wallIndex"];
+            }
+
+             
             string[] pieces = lines[i].Split(':'); // time/name.png
             string[] nums = pieces[0].Split(' '); // hour/min
             //System.Diagnostics.Debug.WriteLine(nums[0] + " " + nums[1]);
             //System.Diagnostics.Debug.WriteLine(hourMin.Item1 + " " + hourMin.Item2);
 
+            int hours = int.Parse(nums[0]);
+            int minutes = int.Parse(nums[1]);
+
             // if current time is time in the current wallpaper
-            if (DateTime.Now.Hour >= int.Parse(nums[0]) && DateTime.Now.Minute >= int.Parse(nums[1]))
+            if (CheckIfTimeForWallpaperChange(hours,minutes))
             {
                 // change wallpaper
                 await SetWallpaperAsync(pieces[1]);
@@ -37,6 +56,24 @@ namespace BackgroundTaskComponent
                 ApplicationData.Current.LocalSettings.Values["wallIndex"] = i;
             }
             _deferral.Complete();
+
+        }
+
+        // Properly determines if the it is time for the wallpaper to change
+        private bool CheckIfTimeForWallpaperChange(int hours, int minutes)
+        {
+            bool timeForChange = false;
+            if (DateTime.Now.Hour > hours)
+            {
+                timeForChange = true; 
+            }
+
+            else if (DateTime.Now.Hour == hours && DateTime.Now.Minute >= minutes)
+            {
+                timeForChange = true;
+            }
+
+            return timeForChange;
         }
 
         // Change wallpaper
@@ -45,11 +82,20 @@ namespace BackgroundTaskComponent
         {
             if (UserProfilePersonalizationSettings.IsSupported())
             {
-                var uri = new Uri("ms-appx:///local/TimeWallpaper/" + assetsFileName);
-                StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+                // There is a space due to the formatting of the file at the end of some of the lines.
+                // This is represented as "\r".
+                // Need to remove it so that timeFolder.GetFileAsync() can work correctly.
+
+                if (assetsFileName.Contains("\r"))
+                {
+                    assetsFileName = assetsFileName.Replace("\r", "");
+                };
+                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
+                StorageFile file = await timeFolder.GetFileAsync(assetsFileName);
                 UserProfilePersonalizationSettings profileSettings = UserProfilePersonalizationSettings.Current;
                 return await profileSettings.TrySetWallpaperImageAsync(file);
-                 
+
             }
             return false;
         }
@@ -57,13 +103,28 @@ namespace BackgroundTaskComponent
         //SendToast msg
         public static void SendToast(string message)
         {
-            var template = ToastTemplateType.ToastText01;
-            var xml = ToastNotificationManager.GetTemplateContent(template);
-            var elements = xml.GetElementsByTagName("Test");
-            var text = xml.CreateTextNode(message);
-            elements[0].AppendChild(text);
-            var toast = new ToastNotification(xml);
-            ToastNotificationManager.CreateToastNotifier().Show(toast);
+            var toastContent = new ToastContent()
+            {
+                Visual = new ToastVisual()
+                {
+                    BindingGeneric = new ToastBindingGeneric()
+                    {
+                            Children =
+                            {
+                                new AdaptiveText()
+                                {
+                                    Text = message
+                                }
+                            }
+                    }
+                }
+            };
+
+            // Create the toast notification
+            var toastNotif = new ToastNotification(toastContent.GetXml());
+
+            // And send the notification
+            ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
         }
         /*
         async Task<bool> SetWallpaperAsync(string assetsFileName)
