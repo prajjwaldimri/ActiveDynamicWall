@@ -17,6 +17,7 @@ namespace BackgroundTaskComponent
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
             _deferral = taskInstance.GetDeferral();
+
             SendToast("Active Dynamic Wallpaper is now running in the background");
 
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
@@ -55,6 +56,7 @@ namespace BackgroundTaskComponent
                 ApplicationData.Current.LocalSettings.Values["wallIndex"] = i;
             }
             _deferral.Complete();
+
         }
 
         // Properly determines if the it is time for the wallpaper to change

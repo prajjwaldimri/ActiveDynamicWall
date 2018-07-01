@@ -62,7 +62,21 @@
                     <TextBlock x:Name="AddImageOutput" Style="{ThemeResource BaseTextBlockStyle}"></TextBlock>
                 </StackPanel>
             </GridView>
-            <GridView ItemsSource="{x:Bind wallpapers}" >
+            <GridView ItemsSource="{x:Bind wallpapers}" Margin="0,0,0,20">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="local:Wallpaper">
+                        <StackPanel Orientation="Vertical" Height="200">
+                            <TextBlock HorizontalAlignment="Left" Margin="10" Text="{x:Bind fileName}"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="10" Text="Time to Apply"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="5" Text="{x:Bind time}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
             </GridView>
         </StackPanel>
     </Grid>
