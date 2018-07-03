@@ -26,9 +26,7 @@ namespace ActiveDynamicWall
         public List<int> numList = new List<int>();
         public MainPage()
         {
-
             InitWallpaper();
-
             this.InitializeComponent();
             AddImageOutput.Text = BackgroundWorkCost.CurrentBackgroundWorkCost.ToString();
         }
@@ -252,22 +250,22 @@ namespace ActiveDynamicWall
         private void ApplyToLockscreen(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["applyLockscreen"] = true;
+            localSettings.Values["applyLockscreen"] = "checked";
         }
         private void NotApplyToLockscreen(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["applyLockscreen"] = false;
+            localSettings.Values["applyLockscreen"] = "unchecked";
         }
         private void ApplyToDesktop(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["applyDesktop"] = true;
+            localSettings.Values["applyDesktop"] = "checked";
         }
         private void NotApplyToDesktop(object sender, RoutedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["applyDesktop"] = false;
+            localSettings.Values["applyDesktop"] = "unchecked";
         }
 
 

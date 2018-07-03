@@ -87,7 +87,8 @@
                     </GridView>
                 </StackPanel>
             </PivotItem>
-            <PivotItem Header="Wallpaper with Day/Night Cycle">
+
+            <PivotItem Header="Wallpaper with Day/Night Cycle (Alpha)">
                 <StackPanel Background="{ThemeResource SystemControlAcrylicWindowBrush}">
                     <TextBlock Text="Use Image Sequences that shift between Day Time and Night Time."/>
                     <GridView Margin="10" HorizontalAlignment="Center" VerticalAlignment="Top" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollMode="Enabled">

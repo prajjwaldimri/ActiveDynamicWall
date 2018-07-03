@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Storage;
@@ -17,9 +14,9 @@ namespace BackgroundTaskComponent
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
             _deferral = taskInstance.GetDeferral();
-
+            /*
             SendToast("Active Dynamic Wallpaper is now running in the background");
-
+            */
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
             StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
 
@@ -49,15 +46,24 @@ namespace BackgroundTaskComponent
             // if current time is time in the current wallpaper
             if (CheckIfTimeForWallpaperChange(hours,minutes))
             {
-                // change wallpaper
-                await SetWallpaperToDesktopAsync(pieces[1]);
+                //Apply to Desktop
+                string desktopSettingValue = (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["applyDesktop"];
+                if (desktopSettingValue == "checked")
+                {
+                    await SetWallpaperToDesktopAsync(pieces[1]);
+                }
+                //Apply To Lockscreen
+                string lockscreenSettingValue = (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["applyLockscreen"];
+                if (lockscreenSettingValue == "checked")
+                {
+                    await SetWallpaperToLockscreemAsync(pieces[1]);
+                }
 
                 if (i == lines.Length - 2) i = -1;
                 i++;
                 ApplicationData.Current.LocalSettings.Values["wallIndex"] = i;
             }
             _deferral.Complete();
-
         }
 
         // Properly determines if the it is time for the wallpaper to change
@@ -96,6 +102,29 @@ namespace BackgroundTaskComponent
                 StorageFile file = await timeFolder.GetFileAsync(assetsFileName);
                 UserProfilePersonalizationSettings profileSettings = UserProfilePersonalizationSettings.Current;
                 return await profileSettings.TrySetWallpaperImageAsync(file);
+
+            }
+            return false;
+        }
+
+        //
+        async Task<bool> SetWallpaperToLockscreemAsync(string assetsFileName)
+        {
+            if (UserProfilePersonalizationSettings.IsSupported())
+            {
+                // There is a space due to the formatting of the file at the end of some of the lines.
+                // This is represented as "\r".
+                // Need to remove it so that timeFolder.GetFileAsync() can work correctly.
+
+                if (assetsFileName.Contains("\r"))
+                {
+                    assetsFileName = assetsFileName.Replace("\r", "");
+                };
+                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                StorageFolder timeFolder = await localFolder.GetFolderAsync("TimeWallpaper");
+                StorageFile file = await timeFolder.GetFileAsync(assetsFileName);
+                UserProfilePersonalizationSettings profileSettings = UserProfilePersonalizationSettings.Current;
+                return await profileSettings.TrySetLockScreenImageAsync(file);
 
             }
             return false;
